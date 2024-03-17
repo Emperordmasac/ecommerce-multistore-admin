@@ -5,16 +5,14 @@ import * as z from "zod"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Billboard, Store } from "@prisma/client"
+import { Billboard } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
-import { useOrigin } from "@/hooks/use-origin"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
-import { ApiAlert } from "@/components/ui/api-alert"
 import { Separator } from "@/components/ui/separator"
 import ImageUpload from "@/components/ui/image-upload"
 import {
@@ -26,7 +24,6 @@ import {
   FormMessage
 } from "@/components/ui/form"
 import { AlertModal } from "@/components/modals/alert-modal"
-import { url } from "inspector"
 
 // billboard  form schema
 const formSchema = z.object({
@@ -43,7 +40,6 @@ type BillboardFormValues = z.infer<typeof formSchema>
 export function BillboardForm({ initialData }: BillboardFormProps) {
   const params = useParams()
   const router = useRouter()
-  const origin = useOrigin()
 
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -66,13 +62,17 @@ export function BillboardForm({ initialData }: BillboardFormProps) {
   const onSubmit = async (values: BillboardFormValues) => {
     try {
       setLoading(true)
-
-      const response = await axios.patch(
-        `/api/stores/${params.storeid}`,
-        values
-      )
+      if (initialData) {
+        await axios.patch(
+          `/api/${params.storeid}/billboards/${params.billboardid}`,
+          values
+        )
+      } else {
+        await axios.post(`/api/${params.storeid}/billboards`, values)
+      }
       router.refresh()
-      toast.success("Store updated successfully")
+      router.push(`/${params.storeid}/billboards`)
+      toast.success(toastMessage)
     } catch (error) {
       toast.error("somthing went wrong, Try again!")
     } finally {
@@ -83,12 +83,16 @@ export function BillboardForm({ initialData }: BillboardFormProps) {
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/stores/${params.storeid}`)
+      await axios.delete(
+        `/api/${params.storeid}/billboards/${params.billboardid}`
+      )
       router.refresh()
       router.push("/")
-      toast.success("Store deleted Successfully")
+      toast.success("Billboard deleted Successfully")
     } catch (error) {
-      toast.error("Make sure you removed all products and categories first")
+      toast.error(
+        "Make sure you removed all categories using this billboard first"
+      )
     } finally {
       setLoading(false)
       setOpen(false)
