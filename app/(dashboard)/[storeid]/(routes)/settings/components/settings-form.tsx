@@ -53,11 +53,7 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
   const onSubmit = async (values: settingsFormValues) => {
     try {
       setLoading(true)
-
-      const response = await axios.patch(
-        `/api/stores/${params.storeid}`,
-        values
-      )
+      await axios.patch(`/api/stores/${params.storeid}`, values)
       router.refresh()
       toast.success("Store updated successfully")
     } catch (error) {
