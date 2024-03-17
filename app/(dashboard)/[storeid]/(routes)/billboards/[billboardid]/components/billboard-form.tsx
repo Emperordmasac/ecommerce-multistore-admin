@@ -73,6 +73,7 @@ export function BillboardForm({ initialData }: BillboardFormProps) {
       router.refresh()
       router.push(`/${params.storeid}/billboards`)
       toast.success(toastMessage)
+      router.refresh()
     } catch (error) {
       toast.error("somthing went wrong, Try again!")
     } finally {
@@ -87,7 +88,8 @@ export function BillboardForm({ initialData }: BillboardFormProps) {
         `/api/${params.storeid}/billboards/${params.billboardid}`
       )
       router.refresh()
-      router.push("/")
+      router.push(`/${params.storeid}/billboards`)
+      router.refresh()
       toast.success("Billboard deleted Successfully")
     } catch (error) {
       toast.error(
@@ -169,7 +171,6 @@ export function BillboardForm({ initialData }: BillboardFormProps) {
           </Button>
         </form>
       </Form>
-      <Separator />
     </>
   )
 }
