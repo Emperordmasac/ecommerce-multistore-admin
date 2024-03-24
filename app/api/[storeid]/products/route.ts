@@ -97,10 +97,10 @@ export async function GET(
 ) {
   try {
     const { searchParams } = new URL(req.url)
-    const categoryId = searchParams.get('categoryid') || undefined
-    const colorId = searchParams.get('colorid') || undefined
-    const sizeId = searchParams.get('sizeid') || undefined
-    const isFeatured = searchParams.get('isfeatured')
+    const categoryId = searchParams.get('categoryId') || undefined
+    const colorId = searchParams.get('colorId') || undefined
+    const sizeId = searchParams.get('sizeId') || undefined
+    const isFeatured = searchParams.get('isFeatured')
 
     if (!params.storeid) {
       return new NextResponse('Store ID is required', { status: 400 })
