@@ -35,3 +35,4 @@ yarn-error.log*
 # typescripts
 *.tsbuildinfo
 next-env.d.ts
+stripe.exe
